@@ -1,50 +1,38 @@
-import numpy as np
+from gradio_client import Client, handle_file
 from fastapi import APIRouter, File, UploadFile
-import joblib
-from pydantic import BaseModel
-import cv2
-from PIL import Image
-import io
+import tempfile
 import logging
+import mimetypes
 import os
-from detecto import utils
-from detecto.core import Model
-from detecto.visualize import show_labeled_image
+
+router = APIRouter()
+client = Client("Shirley96/eye-detector-api")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
-model = Model.load('model/model_weights.pth', ['eye',])
-
-# Set threshold
-thresh = 0.6
-
 @router.post("/")
-async def predict_apparent_temp(file: UploadFile = File(...)):
-    img_content = await file.read()
-    image = Image.open(io.BytesIO(img_content)).convert("RGB")  # PIL 处理
-    image = np.array(image)
-    # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
+async def predict_eye_position(file: UploadFile = File(...)):
     try:
-        labels, boxes, scores = model.predict(image)
-        # Filter results based on threshold
-        filtered_indices = np.where(scores > thresh)
-        filtered_scores = scores[filtered_indices]
-        filtered_boxes = boxes[filtered_indices]
-        if len(filtered_scores) > 2:
-            returned_boxes = filtered_boxes.tolist()[:-1]
-        else:
-            returned_boxes = filtered_boxes.tolist()
-        logger.info(f"filtered_boxes: {filtered_boxes}")
-        logger.info(f"labels: {labels}, scores: {filtered_scores}")
-        return {
-            "data": returned_boxes,
-        }
-    except Exception as e:
-        print(f"Error in model prediction: {e}")
-        return {
-            "data": [],
-        }
+        content_type = file.content_type or "image/jpeg"
+        ext = mimetypes.guess_extension(content_type) or ".jpg"
 
+        with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp_file:
+            tmp_file.write(await file.read())
+            tmp_file_path = tmp_file.name
+
+        result = client.predict(
+            image=handle_file(tmp_file_path),
+            api_name="/predict"
+        )
+
+        logger.info(f"Prediction result: {result}")
+        return {"data": result}
+
+    except Exception as e:
+        logger.error(f"Prediction error: {str(e)}")
+        return {"data": [], "error": str(e)}
+
+    finally:
+        if os.path.exists(tmp_file_path):
+            os.remove(tmp_file_path)
