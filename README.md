@@ -21,18 +21,25 @@ A fun, interactive accessory try-on web app where users can upload their photo a
 
 ```
 git clone https://github.com/ShirleyXW/WearWise.git
-cd try-it-on
 ```
 
 ### 2. Install dependencies
 ```
 npm install
 ```
-### 3.Run the app
+### 3. Run the app (locally)
+In two separate terminals:  
+#### Terminal 1 – start backend (FastAPI)
 ```
+cd backend
+uvicorn main:app --reload
+```
+#### Terminal 2 – start frontend (React)
+```
+cd frontend
+npm install
 npm run dev
 ```
-
 ## 🛠️ Tech Stack
 - Frontend: React + Tailwind CSS
 - Animation: Framer Motion + Tailwind animate utilities
