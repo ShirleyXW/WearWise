@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import test, predict
-from sqlalchemy.sql.functions import user
 
 load_dotenv()
 BASE_URL = os.getenv("BASE_PREFIX", "")
