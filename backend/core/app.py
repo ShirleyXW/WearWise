@@ -13,9 +13,11 @@ def create_app():
     # CORS
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173"],
+        allow_origins=["http://localhost:5173",
+                       "https://wearwise-tryiton.onrender.com/",
+                       "https://wearwise-tryiton.onrender.com"],
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["*"],
     )
     app.include_router(test.router, prefix=f"{BASE_URL}/test")
