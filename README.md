@@ -13,7 +13,7 @@ A fun, interactive accessory try-on web app where users can upload their photo a
 
 ## 📸 Screenshot
 
-![screenshot](./public/screenshot.png)
+<img src="./screenshot.png" alt="screenshot" style="width: 60%;" />
 
 ## 🚀 Getting Started
 
