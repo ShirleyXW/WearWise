@@ -3,6 +3,7 @@ import defaultUrl from "/default.png"
 import {analysisImg} from "~/lib/analysis_img"
 import {Progress} from "~/components/ui/progress";
 import {accessoryConfigs, getAspectRatioType} from "~/lib/accessory_config";
+import {CircularProgressbar} from 'react-circular-progressbar';
 
 
 const ImageDisplay = ({ selectedAccessory }: { selectedAccessory: string | null }) => {
@@ -226,7 +227,7 @@ const ImageDisplay = ({ selectedAccessory }: { selectedAccessory: string | null 
     };
 
     return (
-        <div className="w-full h-2/3 flex flex-col items-center"
+        <div className="w-full h-2/3 flex flex-col items-center z-20"
         >
             <div
                 ref={containerRef}
@@ -245,12 +246,14 @@ const ImageDisplay = ({ selectedAccessory }: { selectedAccessory: string | null 
             </div>
 
             <form className="my-8">
-                <button type="submit"
-                        className="text-white border border-solid bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 my-auto w-24 rounded-full"
-                        onClick={fileHandler}
-                >
-                    upload
-                </button>
+                {!isUploading && (
+                    <button type="submit"
+                            className="text-white border border-solid bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 my-auto w-24 rounded-full"
+                            onClick={fileHandler}
+                    >
+                        upload
+                    </button>
+                )}
                 <input
                     type="file"
                     id="file-input"
@@ -260,7 +263,6 @@ const ImageDisplay = ({ selectedAccessory }: { selectedAccessory: string | null 
                     accept="image/*"
                 />
             </form>
-
             { isUploading && (
                 <Progress className="w-1/3 [&>div]:bg-gradient-to-r [&>div]:from-green-400 [&>div]:via-blue-500 [&>div]:to-purple-600" value={progress}/>
             )}

@@ -23,7 +23,7 @@ const Accessory = ({ onSelect }: { onSelect: (imgUrl: string | null) => void }) 
         onSelect(newSelection);
     }
     return (
-        <Carousel className="w-1/3 h-1/3">
+        <Carousel>
             <CarouselContent className="-ml-1 h-full">
                 {accessories.map((url, index) => (
                     <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
@@ -38,8 +38,8 @@ const Accessory = ({ onSelect }: { onSelect: (imgUrl: string | null) => void }) 
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious/>
-            <CarouselNext/>
+            <CarouselPrevious className="absolute z-30"/>
+            <CarouselNext className="absolute z-30"/>
         </Carousel>
     )
 }
